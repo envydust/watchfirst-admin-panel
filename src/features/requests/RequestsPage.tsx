@@ -137,7 +137,7 @@ export function RequestsPage() {
                   </div>
                   <div className="flex shrink-0 flex-col gap-2 lg:items-end">
                     {r.members.length === 0 && (
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap [&>*]:w-full sm:[&>*]:w-auto">
                         <Button size="sm" variant="primary" icon={<Check className="size-4" />} loading={busy} onClick={() => setCreating({ req: r, plan: 'basic' })}>
                           Criar membro Básico
                         </Button>

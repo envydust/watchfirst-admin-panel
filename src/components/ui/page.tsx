@@ -66,7 +66,7 @@ export function StatTile({
 /** Row of StatTiles: horizontal scroll with snap on phones, four columns from `md`. */
 export function StatRow({ children }: { children: ReactNode }) {
   return (
-    <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:px-0 md:grid md:grid-cols-4 md:overflow-visible [&>*]:min-w-[168px] [&>*]:shrink-0 [&>*]:snap-start md:[&>*]:min-w-0">
+    <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 scroll-px-4 [scrollbar-width:none] sm:mx-0 sm:px-0 sm:scroll-px-0 md:grid md:grid-cols-4 md:overflow-visible [&>*]:min-w-[168px] [&>*]:shrink-0 [&>*]:snap-start md:[&>*]:min-w-0">
       {children}
     </div>
   )
