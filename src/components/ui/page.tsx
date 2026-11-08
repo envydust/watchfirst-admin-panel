@@ -1,14 +1,23 @@
 import type { ReactNode } from 'react'
 import { cn } from '../../lib/cn'
 
-export function PageHeader({ title, description, actions }: { title: string; description?: ReactNode; actions?: ReactNode }) {
+/**
+ * Title row. `primary` is the one main action: on phones it comes first and spans the width, with the
+ * secondary `actions` in a row beneath; from `sm` up everything sits in one line to the right.
+ */
+export function PageHeader({ title, description, actions, primary }: { title: string; description?: ReactNode; actions?: ReactNode; primary?: ReactNode }) {
   return (
     <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div className="min-w-0">
         <h1 className="text-[26px] font-semibold leading-none tracking-[-0.02em] sm:text-[30px]">{title}</h1>
         {description && <p className="mt-2 text-[14px] text-fg-muted">{description}</p>}
       </div>
-      {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
+      {(actions || primary) && (
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+          {primary && <div className="flex [&>*]:w-full sm:order-2 sm:[&>*]:w-auto">{primary}</div>}
+          {actions && <div className="flex flex-wrap items-center gap-2 sm:order-1">{actions}</div>}
+        </div>
+      )}
     </header>
   )
 }
@@ -22,6 +31,7 @@ export function StatTile({
   active,
   onClick,
   loading,
+  className,
 }: {
   label: string
   value: ReactNode
@@ -30,6 +40,7 @@ export function StatTile({
   active?: boolean
   onClick?: () => void
   loading?: boolean
+  className?: string
 }) {
   const valueColor = tone === 'accent' ? 'text-accent' : tone === 'amber' ? 'text-amber' : tone === 'red' ? 'text-red' : 'text-fg'
   const Comp = onClick ? 'button' : 'div'
@@ -42,12 +53,22 @@ export function StatTile({
         'flex min-w-0 flex-col items-start gap-1 rounded-lg border bg-panel px-4 py-3.5 text-left transition-[border-color,background] duration-150',
         onClick && 'hover:border-line-strong hover:bg-raised',
         active ? 'border-accent bg-raised' : 'border-line',
+        className,
       )}
     >
       <span className="text-[12.5px] font-medium text-fg-muted">{label}</span>
       {loading ? <span className="skeleton mt-1 h-7 w-12" /> : <span className={cn('text-[28px] font-semibold leading-none tabular-nums', valueColor)}>{value}</span>}
       {hint && <span className="text-[12px] leading-snug text-fg-dim">{hint}</span>}
     </Comp>
+  )
+}
+
+/** Row of StatTiles: horizontal scroll with snap on phones, four columns from `md`. */
+export function StatRow({ children }: { children: ReactNode }) {
+  return (
+    <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:px-0 md:grid md:grid-cols-4 md:overflow-visible [&>*]:min-w-[168px] [&>*]:shrink-0 [&>*]:snap-start md:[&>*]:min-w-0">
+      {children}
+    </div>
   )
 }
 

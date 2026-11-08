@@ -17,6 +17,7 @@ export const formatDateTime = (ts: number | null | undefined) => formatDate(ts, 
 
 export function relativeTime(ts: number | null | undefined) {
   if (!ts) return '—'
+  if (Math.abs(Date.now() - ts) < 60_000) return 'agora'
   return formatDistanceToNowStrict(new Date(ts), { addSuffix: true, locale: ptBR })
 }
 

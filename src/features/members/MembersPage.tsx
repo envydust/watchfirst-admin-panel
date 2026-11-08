@@ -2,6 +2,7 @@ import { Download, MoreHorizontal, Plus, RefreshCw, Search, UserRoundX, Users } 
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { toast } from 'sonner'
+import { MOCK } from '../../api/client'
 import type { Member, MemberInput } from '../../api/types'
 import { useCan } from '../../auth/permissions'
 import { PlanChip, StatusChip, ValidityChip } from '../../components/ui/badge'
@@ -10,7 +11,7 @@ import { ConfirmDialog, Dialog, DialogContent } from '../../components/ui/dialog
 import { Input, Select } from '../../components/ui/field'
 import { DropdownContent, DropdownItem, DropdownMenu, DropdownSeparator, DropdownTrigger } from '../../components/ui/menu'
 import { EmptyState, Skeleton } from '../../components/ui/misc'
-import { PageHeader, StatTile } from '../../components/ui/page'
+import { PageHeader, StatRow, StatTile } from '../../components/ui/page'
 import { Table, TBody, TD, TH, THead, TR } from '../../components/ui/table'
 import { Ticket } from '../../components/ui/ticket'
 import { downloadCsv } from '../../lib/csv'
@@ -119,13 +120,16 @@ export function MembersPage() {
   const [editing, setEditing] = useState<Member | null>(null)
   // "/membros/novo" lands here with ?novo=1 so the create dialog opens over the list.
   const wantsNew = params.get('novo') === '1'
+  const demoTicket = MOCK && params.get('ticket') === '1'
   useEffect(() => {
     if (wantsNew) {
       setCreating(true)
       setParam('novo', '')
     }
+    // Demo builds only: /membros?ticket=1 shows the one-time code ticket for visual review.
+    if (demoTicket) setTicket({ member: { name: 'Mariana Costa', plan: 'max' }, code: 'WF-7F3A9C21E0B84D6F15A2C9E7B3D04F81A6C2E9D7B5F3A1C8', kind: 'new' })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wantsNew])
+  }, [wantsNew, demoTicket])
   const [ticket, setTicket] = useState<{ member: Pick<Member, 'name' | 'plan'>; code: string; kind: 'new' | 'rotate' } | null>(null)
   const [confirm, setConfirm] = useState<{ kind: 'rotate' | 'disconnect' | 'delete' | 'block' | 'unblock'; member: Member } | null>(null)
 
@@ -229,16 +233,18 @@ export function MembersPage() {
             <Button variant="ghost" icon={<Download className="size-4" />} onClick={exportCsv} disabled={filtered.length === 0}>
               CSV
             </Button>
-            {can('members.write') && (
-              <Button variant="primary" icon={<Plus className="size-4" />} onClick={() => setCreating(true)}>
-                Novo membro
-              </Button>
-            )}
           </>
+        }
+        primary={
+          can('members.write') ? (
+            <Button variant="primary" icon={<Plus className="size-4" />} onClick={() => setCreating(true)}>
+              Novo membro
+            </Button>
+          ) : undefined
         }
       />
 
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+      <StatRow>
         <StatTile
           label="Membros ativos"
           value={stats.active}
@@ -250,27 +256,27 @@ export function MembersPage() {
         <StatTile label="Básico" value={stats.basic} hint="Filmes, séries e animes" active={plan === 'basic'} onClick={() => setParam('plano', plan === 'basic' ? '' : 'basic')} loading={snapshot.isLoading} />
         <StatTile label="MAX" value={stats.max} hint="Experiência completa" active={plan === 'max'} onClick={() => setParam('plano', plan === 'max' ? '' : 'max')} loading={snapshot.isLoading} />
         <StatTile label="Vencem em 7 dias" value={stats.soon} tone={stats.soon > 0 ? 'amber' : 'neutral'} hint="Acompanhe as renovações" active={val === 'soon'} onClick={() => setParam('validade', val === 'soon' ? '' : 'soon')} loading={snapshot.isLoading} />
-      </div>
+      </StatRow>
 
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+      <div className="flex flex-col gap-3 xl:flex-row xl:items-center">
         <div className="relative min-w-0 flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-fg-dim" aria-hidden />
           <Input value={q} onChange={(e) => setParam('q', e.target.value)} placeholder="Buscar por nome, e-mail ou observação" className="pl-9" aria-label="Buscar membros" />
         </div>
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 lg:flex">
-          <Select value={plan} onChange={(e) => setParam('plano', e.target.value)} aria-label="Plano" className="md:w-44">
-            <option value="">Todos os planos</option>
+        <div className="grid grid-cols-3 gap-2 xl:flex">
+          <Select value={plan} onChange={(e) => setParam('plano', e.target.value)} aria-label="Plano" className="xl:w-40">
+            <option value="">Plano</option>
             <option value="basic">Básico</option>
             <option value="max">MAX</option>
           </Select>
-          <Select value={status} onChange={(e) => setParam('status', e.target.value)} aria-label="Situação" className="md:w-48">
-            <option value="">Qualquer situação</option>
+          <Select value={status} onChange={(e) => setParam('status', e.target.value)} aria-label="Situação" className="xl:w-44">
+            <option value="">Situação</option>
             <option value="active">Ativos</option>
             <option value="blocked">Bloqueados</option>
             <option value="expired">Vencidos</option>
           </Select>
-          <Select value={val} onChange={(e) => setParam('validade', e.target.value)} aria-label="Validade" className="md:w-48">
-            <option value="">Qualquer validade</option>
+          <Select value={val} onChange={(e) => setParam('validade', e.target.value)} aria-label="Validade" className="xl:w-48">
+            <option value="">Validade</option>
             <option value="soon">Vencem em 7 dias</option>
             <option value="dated">Com data</option>
             <option value="lifetime">Vitalícios</option>
@@ -361,7 +367,7 @@ export function MembersPage() {
                 <TH sort={sortKey === 'status' ? sortDir : null} onSort={() => toggleSort('status')}>Situação</TH>
                 <TH sort={sortKey === 'expires_at' ? sortDir : null} onSort={() => toggleSort('expires_at')}>Validade</TH>
                 <TH sort={sortKey === 'devices' ? sortDir : null} onSort={() => toggleSort('devices')}>Dispositivos</TH>
-                <TH className="w-12"><span className="sr-only">Ações</span></TH>
+                <TH className="w-14 whitespace-nowrap"><span className="sr-only">Ações</span></TH>
               </tr>
             </THead>
             <TBody>
@@ -381,7 +387,7 @@ export function MembersPage() {
                       <span className="tabular-nums">{m.devices.length}/{m.max_devices}</span>
                       {lastSeen > 0 && <span className="ml-2 hidden text-[12px] text-fg-dim xl:inline">visto {relativeTime(lastSeen)}</span>}
                     </TD>
-                    <TD onClick={(e) => e.stopPropagation()}>
+                    <TD onClick={(e) => e.stopPropagation()} className="w-14 whitespace-nowrap pl-0 pr-3 text-right">
                       <RowMenu
                         member={m}
                         onEdit={() => setEditing(m)}

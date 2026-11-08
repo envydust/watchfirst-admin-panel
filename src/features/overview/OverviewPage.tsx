@@ -7,8 +7,8 @@ import { useCan } from '../../auth/permissions'
 import { useSession } from '../../auth/session'
 import { Button, LinkButton } from '../../components/ui/button'
 import { EmptyState, Skeleton } from '../../components/ui/misc'
-import { PageHeader, Panel, StatTile } from '../../components/ui/page'
-import { DAY, relativeTime, validity } from '../../lib/format'
+import { PageHeader, Panel, StatRow, StatTile } from '../../components/ui/page'
+import { DAY, plural, relativeTime, validity } from '../../lib/format'
 import { useSnapshot } from '../members/hooks'
 import { ActivityList } from '../activity/ActivityList'
 
@@ -42,20 +42,20 @@ export function OverviewPage() {
             : 'Nenhuma solicitação pendente. Tudo em dia.'
         }
         actions={
-          <>
-            <Button variant="ghost" icon={<RefreshCw className="size-4" />} onClick={() => void snapshot.refetch()} loading={snapshot.isFetching}>
-              Atualizar
+          <Button variant="ghost" icon={<RefreshCw className="size-4" />} onClick={() => void snapshot.refetch()} loading={snapshot.isFetching}>
+            Atualizar
+          </Button>
+        }
+        primary={
+          can('members.write') ? (
+            <Button variant="primary" icon={<Plus className="size-4" />} onClick={() => navigate('/membros/novo')}>
+              Novo membro
             </Button>
-            {can('members.write') && (
-              <Button variant="primary" icon={<Plus className="size-4" />} onClick={() => navigate('/membros/novo')}>
-                Novo membro
-              </Button>
-            )}
-          </>
+          ) : undefined
         }
       />
 
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+      <StatRow>
         {can('requests.manage') && (
           <StatTile
             label="Solicitações pendentes"
@@ -78,7 +78,7 @@ export function OverviewPage() {
               label="Vencem em 7 dias"
               value={soon.length}
               tone={soon.length > 0 ? 'amber' : 'neutral'}
-              hint={expired.length > 0 ? `${expired.length} já vencidos` : 'Acompanhe as renovações'}
+              hint={expired.length > 0 ? plural(expired.length, 'já vencido', 'já vencidos') : 'Acompanhe as renovações'}
               onClick={() => navigate('/membros?validade=soon')}
               loading={snapshot.isLoading}
             />
@@ -91,7 +91,7 @@ export function OverviewPage() {
             />
           </>
         )}
-      </div>
+      </StatRow>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.1fr_1fr]">
         {can('requests.manage') && (

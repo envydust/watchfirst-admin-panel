@@ -34,9 +34,10 @@ export function ActivityList({ entries, loading, compact }: { entries: AuditEntr
     return <EmptyState icon={<Activity />} title="Nenhuma atividade" description="As ações feitas no painel aparecem aqui com quem fez cada uma." />
   }
   let lastDay = ''
+  const sorted = entries.slice().sort((a, b) => b.created_at - a.created_at)
   return (
     <ol className="divide-y divide-line">
-      {entries.map((e) => {
+      {sorted.map((e) => {
         const day = dayLabel(e.created_at)
         const showDay = !compact && day !== lastDay
         lastDay = day

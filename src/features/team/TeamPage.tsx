@@ -62,7 +62,7 @@ export function TeamPage() {
       <PageHeader
         title="Equipe e permissões"
         description="Quem pode entrar no painel e o que cada pessoa pode fazer. Só o dono vê esta tela."
-        actions={
+        primary={
           <Button variant="primary" icon={<Plus className="size-4" />} onClick={() => setCreating(true)}>
             Nova conta
           </Button>

@@ -123,7 +123,7 @@ export function RequestsPage() {
                         </p>
                       ) : (
                         <div className="flex flex-col gap-2">
-                          <p className="text-[12.5px] font-medium uppercase tracking-wide text-fg-dim">Liberar como</p>
+                          <p className="text-[13px] font-medium text-fg-muted">Liberar como</p>
                           <div className="flex flex-wrap gap-2">
                             {r.members.map((m) => (
                               <Button key={m.id} variant="primary" size="sm" icon={<Check className="size-4" />} loading={busy} onClick={() => approve.mutate({ id: r.id, choice: { memberId: m.id } })}>
@@ -135,18 +135,18 @@ export function RequestsPage() {
                       )}
                     </div>
                   </div>
-                  <div className="flex shrink-0 flex-wrap gap-2 lg:flex-col lg:items-end">
+                  <div className="flex shrink-0 flex-col gap-2 lg:items-end">
                     {r.members.length === 0 && (
-                      <>
+                      <div className="flex flex-wrap gap-2">
                         <Button size="sm" variant="primary" icon={<Check className="size-4" />} loading={busy} onClick={() => setCreating({ req: r, plan: 'basic' })}>
                           Criar membro Básico
                         </Button>
                         <Button size="sm" variant="primary" icon={<Check className="size-4" />} loading={busy} onClick={() => setCreating({ req: r, plan: 'max' })}>
                           Criar membro MAX
                         </Button>
-                      </>
+                      </div>
                     )}
-                    <Button size="sm" variant="danger" icon={<X className="size-4" />} loading={busy} onClick={() => setRejecting(r)}>
+                    <Button size="sm" variant="danger" icon={<X className="size-4" />} loading={busy} onClick={() => setRejecting(r)} className="self-start lg:self-end">
                       Rejeitar
                     </Button>
                   </div>

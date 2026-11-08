@@ -11,7 +11,7 @@ export function Table({ children, className }: { children: ReactNode; className?
 }
 
 export function THead({ children }: { children: ReactNode }) {
-  return <thead className="bg-[rgba(255,255,255,0.03)] text-[12px] uppercase tracking-wide text-fg-dim">{children}</thead>
+  return <thead className="bg-[rgba(255,255,255,0.03)] text-[12.5px] text-fg-dim">{children}</thead>
 }
 
 export function TBody({ children }: { children: ReactNode }) {

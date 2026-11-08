@@ -89,6 +89,9 @@ export function SettingsPage() {
             <p className="px-5 py-4 text-[13.5px] text-red">{(gg.error as Error).message}</p>
           ) : gg.data ? (
             <div className="flex flex-col gap-4 px-5 py-4 text-[13.5px]">
+              <p className="text-fg-muted">
+                A venda hoje é manual: você cadastra o membro e envia o código. Esta integração continua desligada por decisão do dono; o que aparece abaixo é só para consulta.
+              </p>
               <div className="flex flex-wrap items-center gap-2">
                 <Badge tone={gg.data.settings.enabled ? 'accent' : 'neutral'}>{gg.data.settings.enabled ? 'Integração ativa' : 'Integração desativada'}</Badge>
                 {Object.entries(gg.data.readiness).map(([k, ok]) => (
@@ -97,9 +100,6 @@ export function SettingsPage() {
                   </Badge>
                 ))}
               </div>
-              <p className="text-fg-muted">
-                A venda hoje é manual: você cadastra o membro e envia o código. Esta integração continua desligada por decisão do dono; os dados abaixo são só para consulta.
-              </p>
               {gg.data.purchases.length > 0 && (
                 <ul className="divide-y divide-line rounded-md border border-line">
                   {gg.data.purchases.slice(0, 10).map((p) => (

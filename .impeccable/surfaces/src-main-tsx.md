@@ -43,7 +43,13 @@ above, columns Membro (name + e-mail), Plano, Situação, Validade (relative, am
 drawer; stats scroll horizontally; table rows become cards.
 
 FORM: standard admin shell (side rail + content), position 1 of my ordered list because the owner pinned
-the incumbent arrangement; seed: none (unavailable)
+the incumbent arrangement (screenshot of the current panel, 2026-11-07); the direction roll was not run
+for a pinned incumbent world, so no SEED REFERENCE exists; seed: none (unavailable)
+
+Adaptations recorded after the finish review: the index route is Visão geral (THESIS/STORY put the pending
+request first), with Membros as described in FIRST VIEWPORT one click away; Validade shows a relative label
+only when it matters (≤ 7 days, or expired) and the absolute date otherwise, because renewals are what the
+owner acts on; stat tiles scroll horizontally on phones as a snap row.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict,
 DESIGN.md, and every shipping raster carrying its provenance
