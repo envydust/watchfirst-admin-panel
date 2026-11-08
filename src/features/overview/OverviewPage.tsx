@@ -5,7 +5,7 @@ import { requests as requestsApi } from '../../api/endpoints'
 import { keys } from '../../app/queryClient'
 import { useCan } from '../../auth/permissions'
 import { useSession } from '../../auth/session'
-import { Button, LinkButton } from '../../components/ui/button'
+import { Button } from '../../components/ui/button'
 import { EmptyState, Skeleton } from '../../components/ui/misc'
 import { PageHeader, Panel, StatRow, StatTile } from '../../components/ui/page'
 import { DAY, plural, relativeTime, validity } from '../../lib/format'
@@ -98,9 +98,9 @@ export function OverviewPage() {
           <Panel
             title="Esperando aprovação"
             actions={
-              <LinkButton href="#" onClick={(e) => { e.preventDefault(); navigate('/solicitacoes') }} variant="ghost" size="sm" icon={<ArrowRight className="size-4" />}>
+              <Button onClick={() => navigate('/solicitacoes')} variant="ghost" size="sm" icon={<ArrowRight className="size-4" />}>
                 Ver todas
-              </LinkButton>
+              </Button>
             }
           >
             {requests.isLoading ? (
@@ -133,9 +133,9 @@ export function OverviewPage() {
           <Panel
             title="Últimas atividades"
             actions={
-              <LinkButton href="#" onClick={(e) => { e.preventDefault(); navigate('/atividade') }} variant="ghost" size="sm" icon={<ArrowRight className="size-4" />}>
+              <Button onClick={() => navigate('/atividade')} variant="ghost" size="sm" icon={<ArrowRight className="size-4" />}>
                 Ver tudo
-              </LinkButton>
+              </Button>
             }
           >
             <ActivityList entries={snapshot.data?.audit.slice(0, 8) ?? []} loading={snapshot.isLoading} compact />
