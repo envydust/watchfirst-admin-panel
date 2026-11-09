@@ -4,7 +4,7 @@ import { Button } from '../../components/ui/button'
 import { DialogFooter } from '../../components/ui/dialog'
 import { Field, Input, Select, Textarea } from '../../components/ui/field'
 import { cn } from '../../lib/cn'
-import { DAY, isLifetime } from '../../lib/format'
+import { DAY, displayEmail, isLifetime } from '../../lib/format'
 
 type Preset = 30 | 90 | 365 | 'lifetime' | 'custom'
 
@@ -32,7 +32,7 @@ export function MemberForm({
 }) {
   const initialPreset: Preset = member ? (isLifetime(member.expires_at) ? 'lifetime' : 'custom') : 'lifetime'
   const [name, setName] = useState(member?.name ?? '')
-  const [email, setEmail] = useState(member?.email ?? '')
+  const [email, setEmail] = useState(displayEmail(member?.email ?? ''))
   const [plan, setPlan] = useState<Plan>(member?.plan ?? 'basic')
   const [status, setStatus] = useState<'active' | 'blocked'>(member?.status ?? 'active')
   const [preset, setPreset] = useState<Preset>(initialPreset)

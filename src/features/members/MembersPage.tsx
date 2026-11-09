@@ -15,7 +15,8 @@ import { PageHeader, StatRow, StatTile } from '../../components/ui/page'
 import { Table, TBody, TD, TH, THead, TR } from '../../components/ui/table'
 import { Ticket } from '../../components/ui/ticket'
 import { downloadCsv } from '../../lib/csv'
-import { DAY, formatDate, isLifetime, planLabel, relativeTime, statusLabel, validity } from '../../lib/format'
+import { DAY, displayEmail, formatDate, isLifetime, planLabel, relativeTime, statusLabel, validity } from '../../lib/format'
+import { cn } from '../../lib/cn'
 import { accessCodeMessage } from '../../lib/whatsapp'
 import { useMemberMutations, useSnapshot } from './hooks'
 import { MemberForm } from './MemberForm'
@@ -78,7 +79,7 @@ export function MembersPage() {
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase()
     const list = all.filter((m) => {
-      if (needle && !`${m.name} ${m.email} ${m.notes}`.toLowerCase().includes(needle)) return false
+      if (needle && !`${m.name} ${displayEmail(m.email)} ${m.notes}`.toLowerCase().includes(needle)) return false
       if (plan && m.plan !== plan) return false
       if (status === 'active' && !(m.status === 'active' && m.expires_at > now)) return false
       if (status === 'blocked' && m.status !== 'blocked') return false
@@ -175,7 +176,7 @@ export function MembersPage() {
       ['Nome', 'E-mail', 'Plano', 'Situação', 'Validade', 'Dispositivos', 'Limite', 'Observações', 'Criado em'],
       filtered.map((m) => [
         m.name,
-        m.email,
+        displayEmail(m.email),
         planLabel(m.plan),
         statusLabel(m.status),
         isLifetime(m.expires_at) ? 'Vitalício' : formatDate(m.expires_at),
@@ -336,7 +337,7 @@ export function MembersPage() {
                   <div className="flex items-start justify-between gap-3">
                     <button type="button" onClick={() => navigate(`/membros/${m.id}`)} className="min-w-0 flex-1 text-left">
                       <p className="truncate text-[15px] font-medium">{m.name}</p>
-                      <p className="truncate text-[12.5px] text-fg-dim">{m.email || 'sem e-mail'}</p>
+                      <p className={cn('truncate text-[12.5px]', displayEmail(m.email) ? 'text-fg-dim' : 'italic text-amber/80')}>{displayEmail(m.email) || 'sem e-mail informado'}</p>
                     </button>
                     <RowMenu
                       member={m}
@@ -378,7 +379,7 @@ export function MembersPage() {
                   <TR key={m.id} onClick={() => navigate(`/membros/${m.id}`)}>
                     <TD>
                       <p className="font-medium">{m.name}</p>
-                      <p className="text-[12.5px] text-fg-dim">{m.email || 'sem e-mail'}</p>
+                      <p className={cn('text-[12.5px]', displayEmail(m.email) ? 'text-fg-dim' : 'italic text-amber/80')}>{displayEmail(m.email) || 'sem e-mail informado'}</p>
                     </TD>
                     <TD><PlanChip plan={m.plan} /></TD>
                     <TD>{m.status === 'blocked' ? <StatusChip status="blocked" /> : v.state === 'expired' ? <ValidityChip state="expired" label="Vencido" /> : <StatusChip status="active" />}</TD>

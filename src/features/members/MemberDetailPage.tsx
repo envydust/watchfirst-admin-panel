@@ -12,7 +12,7 @@ import { ConfirmDialog, Dialog, DialogContent } from '../../components/ui/dialog
 import { EmptyState, Skeleton } from '../../components/ui/misc'
 import { Panel } from '../../components/ui/page'
 import { Ticket } from '../../components/ui/ticket'
-import { DAY, formatDate, formatDateTime, isLifetime, planLabel, relativeTime, validity } from '../../lib/format'
+import { DAY, displayEmail, formatDate, formatDateTime, isLifetime, planLabel, relativeTime, validity } from '../../lib/format'
 import { accessCodeMessage } from '../../lib/whatsapp'
 import { ActivityList } from '../activity/ActivityList'
 import { MemberForm } from './MemberForm'
@@ -93,7 +93,7 @@ export function MemberDetailPage() {
             {member.status === 'blocked' ? <StatusChip status="blocked" /> : <ValidityChip state={v.state} label={v.label} />}
           </div>
           <p className="mt-2 text-[14px] text-fg-muted">
-            {member.email || 'Sem e-mail cadastrado'} · membro desde {formatDate(member.created_at)}
+            {displayEmail(member.email) || <span className="italic text-amber/80">Sem e-mail informado — edite para registrar</span>} · membro desde {formatDate(member.created_at)}
           </p>
         </div>
         <div className="flex items-center gap-2">

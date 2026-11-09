@@ -36,6 +36,10 @@ export function validity(expiresAt: number, now = Date.now()): { state: Validity
 export const planLabel = (plan: string) => (plan === 'max' ? 'MAX' : 'Básico')
 export const statusLabel = (status: string) => (status === 'blocked' ? 'Bloqueado' : 'Ativo')
 
+/** Members created by the public site get a placeholder address until the person informs theirs. */
+export const isPlaceholderEmail = (email: string) => /@public\.watchfirst\.invalid$/i.test(email)
+export const displayEmail = (email: string) => (!email || isPlaceholderEmail(email) ? '' : email)
+
 export function maskEmail(email: string) {
   const [user = '', domain = ''] = email.split('@')
   return `${user.slice(0, 1)}***@${domain}`
